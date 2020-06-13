@@ -787,6 +787,7 @@ RCT_EXPORT_METHOD(paymentRequestWithCardForm:(NSDictionary *)options
     NSString *companyName = options[@"companyName"] ? options[@"companyName"] : @"";
     STPUserInformation *prefilledInformation = [self userInformation:options[@"prefilledInformation"]];
     NSString *nextPublishableKey = options[@"publishableKey"] ? options[@"publishableKey"] : publishableKey;
+    NSString *nextStripeAccount = options[@"stripeAccount"] ? options[@"stripeAccount"] : stripeAccount;
     UIModalPresentationStyle formPresentation = [self formPresentation:options[@"presentation"]];
     STPTheme *theme = [self formTheme:options[@"theme"]];
 
@@ -794,9 +795,11 @@ RCT_EXPORT_METHOD(paymentRequestWithCardForm:(NSDictionary *)options
     [configuration setRequiredBillingAddressFields:requiredBillingAddressFields];
     [configuration setCompanyName:companyName];
     [configuration setPublishableKey:nextPublishableKey];
+    [configuration setStripeAccount:nextStripeAccount];
 
     STPAddCardViewController *vc = [[STPAddCardViewController alloc] initWithConfiguration:configuration theme:theme];
     vc.delegate = self;
+    vc.apiClient.stripeAccount = configuration.stripeAccount;
     vc.prefilledInformation = prefilledInformation;
     // STPAddCardViewController must be shown inside a UINavigationController.
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
